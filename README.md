@@ -1,6 +1,6 @@
 # unemployment-inclass-summer-2023
 
-
+![tests](https://github.com/s2t2/unemployment-2023-testing-prep/actions/workflows/python-app.yml/badge.svg)
 
 ## Setup
 
@@ -36,4 +36,10 @@ Run the report:
 python app/unemployment.py
 
 python -m app.unemployment
+```
+
+## Testing
+
+```sh
+pytest
 ```
