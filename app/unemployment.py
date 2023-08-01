@@ -13,6 +13,7 @@ load_dotenv() #> invoking this function loads contents of the ".env" file into t
 API_KEY = os.getenv("ALPHAVANTAGE_API_KEY")
 
 
+
 def format_pct(my_number):
     """
     Formats a percentage number like 3.6555554 as percent, rounded to two decimal places.
@@ -25,9 +26,11 @@ def format_pct(my_number):
 
 
 
-if __name__ == "__main__":
-
-
+def fetch_unemployment_data():
+    """Fetches unemployment data from the AlphaVantage API.
+        Returns data as a list of dictionaries, where each represents the unemployment rate for a given month.
+        Formats rates as floats.
+    """
 
     request_url = f"https://www.alphavantage.co/query?function=UNEMPLOYMENT&apikey={API_KEY}"
 
@@ -37,8 +40,25 @@ if __name__ == "__main__":
     print(type(parsed_response))
     pprint(parsed_response)
 
-
     data = parsed_response["data"]
+    #return data
+
+    # we could return the raw data, but the values are strings,
+    # so let's convert them to floats (more usable) before returning
+    for d in data:
+        d["value"] = float(d["value"]) # this is mutating and will overwrite the data
+
+    return data
+
+
+
+
+if __name__ == "__main__":
+
+
+
+    data = fetch_unemployment_data()
+
 
     # Challenge A
     #
@@ -48,7 +68,6 @@ if __name__ == "__main__":
     print("-------------------------")
     print("LATEST UNEMPLOYMENT RATE:")
     #print(data[0])
-    #print(f"{data[0]['value']}%", "as of", data[0]["date"])
     print(f"{format_pct(data[0]['value'])}", "as of", data[0]["date"])
 
     # Challenge B
@@ -58,11 +77,10 @@ if __name__ == "__main__":
 
     this_year = [d for d in data if "2023-" in d["date"]]
 
-    rates_this_year = [float(d["value"]) for d in this_year]
+    rates_this_year = [d["value"] for d in this_year]
     #print(rates_this_year)
 
     print("-------------------------")
-    #print("AVG UNEMPLOYMENT THIS YEAR:", f"{mean(rates_this_year)}%")
     print("AVG UNEMPLOYMENT THIS YEAR:", f"{format_pct(mean(rates_this_year))}")
     print("NO MONTHS:", len(this_year))
 
@@ -72,7 +90,7 @@ if __name__ == "__main__":
     # Plot a line chart of unemployment rates over time.
 
     dates = [d["date"] for d in data]
-    rates = [float(d["value"]) for d in data]
+    rates = [d["value"] for d in data]
 
     fig = line(x=dates, y=rates, title="United States Unemployment Rate over time", labels= {"x": "Month", "y": "Unemployment Rate"})
     fig.show()
