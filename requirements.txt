@@ -6,8 +6,12 @@ pandas
 
 plotly
 
-
 python-dotenv
+
+# for web app:
+flask
+#gunicorn
+
 
 
 # for testing:
