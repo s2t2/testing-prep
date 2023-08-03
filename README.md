@@ -58,4 +58,5 @@ flask run
 pytest
 ```
 
-## Deployment
+
+## [Deployment Guide](/DEPLOYING.md)
